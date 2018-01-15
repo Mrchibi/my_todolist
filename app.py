@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import pymysql
 from flask import (Flask,render_template,g,session,redirect,url_for,
-                   request)
+                   request,flash)
 
 SECRET_KEY = 'this is key'#Session, Cookies以及一些第三方扩展都会用到SECRET_KEY值，
 #这是一个比较重要的配置值，应该尽可能设置为一个很难猜到的值，随机值更佳。
@@ -57,11 +57,12 @@ def login():
     error = None
     if request.method =='POST':#若是GET请求则直接渲染登录表单
         if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
+            flash('Invalid username')
         elif request.form['password'] !=app.config['PASSWORD']:
-            error = 'Invalid password'
+            flash('Invalid password')
         else:
             session['logged_in'] = True
+            flash('You have logged in!')
             return redirect(url_for('show_todo_list'))
     return render_template('login.html')
     
@@ -69,6 +70,10 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in',None)#如果会话中有logged_in就删除它
+    flash('You have logout!')
+    #仅调用flash只是发给客户端一条信息，不负责显示的。
+    #显示Flash的信息需要在模板中使用
+    #get_flashed_messages()函数获取Flash的信息，并渲染信息。
     return redirect(url_for('login'))
 
 

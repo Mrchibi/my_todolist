@@ -14,6 +14,22 @@
 			<nav class="navbar navbar-inverse container">
 			<div class="navbar-header"><a class="navbar-brand" href="{{url_for('show_todo_list')}}">TODO</a></div>
 			</nav>
+			
+			<!-- flash message -->
+			{% for message in get_flashed_messages() %}
+			<div class="alert alert-warning alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert">
+				<!-- 向关闭按钮添加 data-dismiss="alert"，就会自动为警告框添加关闭功能。 -->
+					<span aria-hidden="true">&times;</span><!-- 用于屏幕阅读器的 -->
+					<span class="sr-only">close</span><!-- sr:screen reader(屏幕阅读器)，加上 sr-only 的意义就在于能保证屏幕阅读器正确读取且不会影响 UI 的视觉呈现。 --></button>
+				{{ message }}	
+					
+			</div>
+			{% endfor %}
+			
+			
+			
+			
 			<!-- body block -->
 			{% block content %}
 			{% endblock %}
