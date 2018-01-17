@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import time
 import pymysql
 from flask import (Flask,render_template,g,session,redirect,url_for,
-                   request,flash)
+                   request,flash,abort)
 
 SECRET_KEY = 'this is key'#Session, Cookies以及一些第三方扩展都会用到SECRET_KEY值，
 #这是一个比较重要的配置值，应该尽可能设置为一个很难猜到的值，随机值更佳。
@@ -62,6 +62,22 @@ def show_todo_list():
             g.db.commit()
         flash('You have add a new todo list')
         return redirect(url_for('show_todo_list'))
+
+@app.route('/delete')
+def delete_todo_list():
+    id = request.args.get('id',None)
+    if id is None:
+        abort(404)
+    else:
+        sql = "delete from todolist where id = {0}".format(id)
+        with g.db.cursor() as cur:
+            cur.execute(sql)
+            g.db.commit()
+        flash('You have delete a todo list')
+        return redirect(url_for('show_todo_list'))
+
+
+
     
     
 @app.route('/login',methods=['GET','POST'])
