@@ -5,7 +5,11 @@ import time
 import pymysql
 from flask import (Flask,render_template,g,session,redirect,url_for,
                    request,flash,abort)
+from forms import TodoListForm
 from flask_bootstrap import Bootstrap#初始化Flask-bootstrap，把程序实例传入构造方法进行初始化
+
+
+
 SECRET_KEY = 'this is key'#Session, Cookies以及一些第三方扩展都会用到SECRET_KEY值，
 #这是一个比较重要的配置值，应该尽可能设置为一个很难猜到的值，随机值更佳。
 
@@ -44,6 +48,7 @@ def after_request(response):
 def show_todo_list():
     if not session.get('logged_in'):
         return redirect(url_for('login'))#如果存储的session中logged_in值为False则重定向到login（ url）
+    form = TodoListForm()
     if request.method =='GET':
         sql='select id,user_id,title,status,create_time from todolist'
         with g.db.cursor() as cur:
@@ -51,17 +56,20 @@ def show_todo_list():
             todo_list = [dict(id=row[0],user_id=row[1],title=row[2],status=bool(row[3]),create_time=row[4]) 
                          for row in cur.fetchall()]
             g.db.commit()
-        return render_template('index.html',todo_list=todo_list)
+        return render_template('index.html',todo_list=todo_list,form=form)
     else:
-        title = request.form['title']
-        status = request.form['status']
-        with g.db.cursor() as cur:
-            sql = """insert into todolist(`user_id`, `title`, `status`,
-            `create_time`) values ({0}, '{1}', {2}, {3})""".format( 1, title, status, int(time.time()))
-            app.logger.info(sql)
-            cur.execute(sql)
-            g.db.commit()
-        flash('You have add a new todo list')
+        if form.validate_on_submit():
+            title = request.form['title']
+            status = request.form['status']
+            with g.db.cursor() as cur:
+                sql = """insert into todolist(`user_id`, `title`, `status`,
+                `create_time`) values ({0}, '{1}', {2}, {3})""".format( 1, title, status, int(time.time()))
+                app.logger.info(sql)
+                cur.execute(sql)
+                g.db.commit()
+            flash('You have add a new todo list')
+        else:
+            flash(form.errors)
         return redirect(url_for('show_todo_list'))
 
 @app.route('/delete')
