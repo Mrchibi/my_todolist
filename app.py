@@ -5,12 +5,13 @@ import time
 import pymysql
 from flask import (Flask,render_template,g,session,redirect,url_for,
                    request,flash,abort)
-
+from flask_bootstrap import Bootstrap#初始化Flask-bootstrap，把程序实例传入构造方法进行初始化
 SECRET_KEY = 'this is key'#Session, Cookies以及一些第三方扩展都会用到SECRET_KEY值，
 #这是一个比较重要的配置值，应该尽可能设置为一个很难猜到的值，随机值更佳。
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+bootstrap = Bootstrap(app)
 
 app.config['USERNAME']='admin'
 app.config['PASSWORD']='admin'

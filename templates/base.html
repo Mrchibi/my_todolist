@@ -1,46 +1,43 @@
-<!DOCTYPE html><!-- 向 HTML 文档添加 <!DOCTYPE> 声明，这样浏览器才能获知文档类型,此处为HTML5 -->
-<html lang="zh-CN">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width,initial-scale=1"><!-- <meta name="viewport" content="width=device-width, initial-scale=1">网页缩放比例 -->
-		<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		{% block title %}<title>MY TODOLIST</title>{% endblock %}
-	</head>
-	
-	<body>
-		<div class="container">
-			<!-- navbar -->
-			<nav class="navbar navbar-inverse container">
-			<div class="navbar-header"><a class="navbar-brand" href="{{url_for('show_todo_list')}}">TODO</a></div>
-			</nav>
-			
-			<!-- flash message -->
-			{% for message in get_flashed_messages() %}
-			<div class="alert alert-warning alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert">
-				<!-- 向关闭按钮添加 data-dismiss="alert"，就会自动为警告框添加关闭功能。 -->
-					<span aria-hidden="true">&times;</span><!-- 用于屏幕阅读器的 -->
-					<span class="sr-only">close</span><!-- sr:screen reader(屏幕阅读器)，加上 sr-only 的意义就在于能保证屏幕阅读器正确读取且不会影响 UI 的视觉呈现。 --></button>
-				{{ message }}	
-					
-			</div>
-			{% endfor %}
-			
-			
-			
-			
-			<!-- body block -->
-			{% block content %}
-			{% endblock %}
-			
-			
-		</div>
-		<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-		<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+{% extends "bootstrap/base.html" %}
 
-		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-		<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% block title %}My TODO List{% endblock %}
+	
+{% block navbar %}	
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse container">
+		<div class="navbar-header"><a class="navbar-brand" href="{{url_for('show_todo_list')}}">TODO</a></div>
+		<!-- logout links -->
+		{% if "logged_in" in session %}
+		<ul class="nav navbar-nav pull-right">
+			<li><a class="btn" href="{{ url_for('logout') }}">logout</a></li>
+		</ul>
+		{% endif %}
+	</nav>
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+	
+	<!-- flash message -->
+	{% for message in get_flashed_messages() %}
+	<div class="alert alert-warning alert-dismissible" role="alert">
+		<button type="button" class="close" data-dismiss="alert">
+		<!-- 向关闭按钮添加 data-dismiss="alert"，就会自动为警告框添加关闭功能。 -->
+			<span aria-hidden="true">&times;</span><!-- 用于屏幕阅读器的 -->
+			<span class="sr-only">close</span><!-- sr:screen reader(屏幕阅读器)，加上 sr-only 的意义就在于能保证屏幕阅读器正确读取且不会影响 UI 的视觉呈现。 --></button>
+		{{ message }}	
 			
-	</body>
-</html>
+	</div>
+	{% endfor %}
+	
+	
+	
+	
+	<!-- body block -->
+	{% block page_content %}
+	{% endblock %}
+	</div>
+	
+{% endblock %}
+			
+		
