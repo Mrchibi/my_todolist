@@ -1,20 +1,11 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
 <div class="row">
-	<div class="col-md-4 col-md-offset-4">
-		<form class="form-signin" role="form" method="POST" action="{{url_for('login')}}" ><!-- 必需的 action 属性规定当提交表单时，向何处发送表单数据。role是无障碍阅读，是给有阅读障碍的人设置的属性，有阅读障碍的人可以用读屏软件来解析， -->
-			<h2 class="form-signin-heading">please sign in</h2>
-			<input type="username" name="username" class="form-control" placeholder="username" required autofocus><!-- autofocus 属性规定当页面加载时 <input> 元素应该自动获得焦点。 -->
-			<input type="password" name="password" class="form-control" placeholder="password" required><!-- tips的跳出 -->
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-			<!-- 请始终为按钮规定 type 属性 submit提交表单数据 -->
-		
-		
-		
-		
-		</form>
-	</div>
+    <div class="col-md-4 col-md-offset-4">
+        <h2 class="form-signin-heading">please sigin in</h2>
+        {{ wtf.quick_form(form, form_type="horizontal") }}
+    </div>
 </div>
-
 {% endblock %}
